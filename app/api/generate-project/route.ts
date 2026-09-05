@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error(error);
     if (error && typeof error === "object" && "name" in error && error.name === "ZodError") {
-      return NextResponse.json({ error: (error as any).errors }, { status: 400 });
+      return NextResponse.json({ error: (error as unknown as { errors: unknown[] }).errors }, { status: 400 });
     }
     return NextResponse.json({ error: "Generation failed" }, { status: 500 });
   }
