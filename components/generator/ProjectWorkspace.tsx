@@ -12,7 +12,7 @@ export default function ProjectWorkspace() {
   const [skills, setSkills] = useState(["Python", "React"]);
   const [teamSize, setTeamSize] = useState(3);
   const [durationWeeks, setDurationWeeks] = useState(12);
-  const [targetOutcome, setTargetOutcome] = useState("MVP");
+  const [targetOutcome] = useState("MVP");
 
   const generate = async () => {
     setLoading(true);
@@ -26,8 +26,12 @@ export default function ProjectWorkspace() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Generation failed");
       setIdeas(data.ideas);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }

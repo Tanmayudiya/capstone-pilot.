@@ -64,10 +64,10 @@ export async function POST(req: NextRequest) {
 
     const ideas = JSON.parse(response.text || "[]");
     return NextResponse.json({ ideas });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-    if (error.name === "ZodError") {
-      return NextResponse.json({ error: error.errors }, { status: 400 });
+    if (error && typeof error === "object" && "name" in error && error.name === "ZodError") {
+      return NextResponse.json({ error: (error as any).errors }, { status: 400 });
     }
     return NextResponse.json({ error: "Generation failed" }, { status: 500 });
   }
